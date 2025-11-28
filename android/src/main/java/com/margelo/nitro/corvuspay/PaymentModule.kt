@@ -2,9 +2,10 @@ package com.margelo.nitro.corvuspay
 
 import android.app.Activity
 import android.content.Intent
-import android.util.Log
 import com.margelo.nitro.corvuspay.CheckoutBuilder.buildCheckoutFromParams
+import com.corvuspay.sdk.CorvusPay
 import com.corvuspay.sdk.constants.CheckoutCodes
+import com.facebook.react.bridge.ActivityEventListener
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
@@ -13,7 +14,7 @@ import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
 
 class PaymentModule(reactContext: ReactApplicationContext) :
-    ReactContextBaseJavaModule(reactContext) {
+    ReactContextBaseJavaModule(reactContext), ActivityEventListener {
 
     companion object {
         private const val NAME = "PaymentModule"
@@ -28,6 +29,11 @@ class PaymentModule(reactContext: ReactApplicationContext) :
 
     private var pendingPromise: Promise? = null
     private var environment = ENV_TEST
+    private val mReactContext = reactContext
+
+    init {
+        reactContext.addActivityEventListener(this)
+    }
 
     override fun getName(): String {
         return NAME
@@ -135,41 +141,24 @@ class PaymentModule(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun checkoutWithSignature(params: ReadableMap, signature: String, promise: Promise) {
+        val activity = mReactContext.currentActivity as? Activity
+        if (activity == null) {
+            promise.reject("NO_ACTIVITY", "Current activity is null.")
+            return
+        }
         if (pendingPromise != null) {
             promise.reject("ALREADY_RUNNING", "Another checkout flow is in progress.")
             return
         }
 
         try {
-            // Store promise for handling activity result
-            pendingPromise = promise
-            
-            // Build checkout from parameters
             val checkout = buildCheckoutFromParams(params, signature)
-            
-            Log.d("PaymentModule", "Checkout called: Order=${PaymentUtils.optString(params, "orderId")}, Amount=${params.getDouble("amount")}")
-            
-            // TODO: Call CorvusPay SDK when available
-            // For now, just log
-            // val activity = reactApplicationContext.currentActivity
-            // if (activity != null) {
-            //     com.corvuspay.sdk.CorvusPay.checkout(activity, checkout, environment)
-            // }
-            
-            val result = Arguments.createMap()
-            result.putString("status", "checkout_initiated")
-            result.putString("environment", environment)
-            result.putString("orderId", PaymentUtils.optString(params, "orderId"))
-            result.putDouble("amount", params.getDouble("amount"))
-            result.putString("message", "CorvusPay SDK stub - checkout parameters logged")
-            
-            promise.resolve(result)
-            pendingPromise = null
+            pendingPromise = promise
+
+            CorvusPay.checkout(activity, checkout, environment)
 
         } catch (t: Throwable) {
-            Log.e("PaymentModule", "Checkout error", t)
             promise.reject("CHECKOUT_INIT_ERROR", t.message, t)
-            pendingPromise = null
         }
     }
 
@@ -177,18 +166,7 @@ class PaymentModule(reactContext: ReactApplicationContext) :
     fun checkoutWithSecret(params: ReadableMap, secretKey: String, promise: Promise) {
         try {
             val temp = buildCheckoutFromParams(params = params, signature = "")
-            
-            // Create a string representation for signing
-            val stringToBeSigned = buildString {
-                append(params.getInt("storeId"))
-                append("|")
-                append(PaymentUtils.optString(params, "orderId") ?: "")
-                append("|")
-                append(params.getDouble("amount"))
-                append("|")
-                append(PaymentUtils.optString(params, "currency") ?: "EUR")
-            }
-            
+            val stringToBeSigned = temp.generateStringForSignature()
             val signedCheckout =
                 EncryptionHelper.generateHashWithHmac256(stringToBeSigned, secretKey)
 
@@ -197,5 +175,87 @@ class PaymentModule(reactContext: ReactApplicationContext) :
         } catch (t: Throwable) {
             promise.reject("SIGNING_ERROR", t.message, t)
         }
+    }
+
+    override fun onActivityResult(
+        activity: Activity,
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+    ) {
+        if (requestCode == CheckoutCodes.REQUEST_CHECKOUT) {
+            val promise = pendingPromise
+            pendingPromise = null
+
+            if (promise == null) return
+
+            try {
+                when (resultCode) {
+                    CheckoutCodes.RESULT_CODE_CHECKOUT_SUCCESS -> {
+                        // You may extract reference/transaction id from the Intent extras if provided by the SDK demo.
+                        // For safety, return a minimal payload and let your backend confirm the status server-to-server.
+                        
+                        // Log Intent data for debugging
+                        println("PaymentModule - Checkout Success - Intent data:")
+                        println("PaymentModule -Intent is null: ${data == null}")
+                        
+                        if (data != null) {
+                            println("PaymentModule -Intent action: ${data.action}")
+                            println("PaymentModule -Intent data URI: ${data.data}")
+                            println("PaymentModule -Intent type: ${data.type}")
+                            println("PaymentModule -Intent categories: ${data.categories}")
+                            println("PaymentModule -Intent component: ${data.component}")
+                            println("PaymentModule -Intent package: ${data.`package`}")
+                            
+                            val extras = data.extras
+                            println("PaymentModule -Intent extras is null: ${extras == null}")
+                            
+                            if (extras != null) {
+                                println("PaymentModule -Intent extras size: ${extras.size()}")
+                                println("PaymentModule -Intent extras keys: ${extras.keySet()}")
+                                
+                                // Log each extra key-value pair
+                                for (key in extras.keySet()) {
+                                    val value = extras.get(key)
+                                    println("PaymentModule -Extra '$key': $value (type: ${value?.javaClass?.simpleName})")
+                                }
+                            }
+                        }
+                        
+                        promise.resolve(Arguments.createMap()) // or pass back fields from data.getExtras()
+                    }
+
+                    CheckoutCodes.RESULT_CODE_CHECKOUT_ABORTED -> {
+                        promise.reject("CHECKOUT_ABORTED", "User cancelled checkout.")
+                    }
+
+                    CheckoutCodes.RESULT_CODE_CHECKOUT_FAILURE -> {
+                        var err = "Checkout failed."
+                        if (data?.extras != null) {
+                            // Optionally propagate SDK error messages if available in extras
+                            val sdkMsg = data.extras?.get("errorMessage")
+                            if (sdkMsg != null) err = sdkMsg.toString()
+                        }
+                        promise.reject("CHECKOUT_FAILURE", err)
+                    }
+
+                    else -> {
+                        var err = "Checkout failed."
+                        if (data?.extras != null) {
+                            // Optionally propagate SDK error messages if available in extras
+                            val sdkMsg = data.extras?.get("errorMessage")
+                            if (sdkMsg != null) err = sdkMsg.toString()
+                        }
+                        promise.reject("CHECKOUT_FAILURE", err)
+                    }
+                }
+            } catch (t: Throwable) {
+                promise.reject("RESULT_PARSE_ERROR", t.message, t)
+            }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        // Not used; SDK returns via startActivityForResult per docs.
     }
 }

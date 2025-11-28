@@ -28,4 +28,9 @@ data class Checkout(
     val creditorReference: String? = null,
     val debtorIban: String? = null,
     val shopAccountId: String? = null
-)
+) {
+    fun generateStringForSignature(): String {
+        val amountFormatted = String.format("%.2f", amount)
+        return "$storeId|$orderId|$amountFormatted|${currency.name}"
+    }
+}

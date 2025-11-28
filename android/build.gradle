@@ -117,6 +117,9 @@ android {
 repositories {
   mavenCentral()
   google()
+  flatDir {
+    dirs 'libs'
+  }
 }
 
 def kotlin_version = getExtOrDefault("kotlinVersion")
@@ -125,4 +128,5 @@ dependencies {
   implementation "com.facebook.react:react-android"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   implementation project(":react-native-nitro-modules")
+  implementation files('libs/sdk-release-1.18.aar')
 }

@@ -1,2 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <!-- Test Checkout Activity for CorvusPay -->
+        <activity
+            android:name="com.corvuspay.sdk.CheckoutActivity"
+            android:exported="false"
+            android:label="CorvusPay Checkout" />
+    </application>
+
 </manifest>
