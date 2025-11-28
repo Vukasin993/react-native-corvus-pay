@@ -1,6 +1,6 @@
 {
   "name": "react-native-corvus-pay",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "react-native-corvus-pay je React Native modul koji omogućava brzu i sigurnu integraciju CorvusPay Internet Payment Gatewaya u mobilne aplikacije razvijene pomoću React Native frameworka (za iOS i Android platforme).",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
