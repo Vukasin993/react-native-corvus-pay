@@ -1,0 +1,17 @@
+{
+  "cxxNamespace": ["corvuspay"],
+  "ios": {
+    "iosModuleName": "CorvusPay"
+  },
+  "android": {
+    "androidNamespace": ["corvuspay"],
+    "androidCxxLibName": "corvuspay"
+  },
+  "autolinking": {
+    "CorvusPay": {
+      "swift": "CorvusPay",
+      "kotlin": "CorvusPay"
+    }
+  },
+  "ignorePaths": ["node_modules"]
+}
