@@ -1,91 +1,91 @@
 # 🚀 CorvusPay React Native SDK - Payment Module Integration
 
-## Što je urađeno
+## What Has Been Done
 
-Integracija kompletnog payment modula za CorvusPay Internet Payment Gateway u React Native SDK za Android i iOS.
+Integration of complete payment module for CorvusPay Internet Payment Gateway into React Native SDK for Android and iOS.
 
-### ✅ Dodani Fajlovi
+### ✅ Added Files
 
 #### Android (Kotlin)
 
 ```
-PaymentModule.kt              # React Native bridge za plaćanja
-PaymentPackage.kt             # React package registracija  
-CheckoutBuilder.kt            # Builder za checkout parametare
-PaymentUtils.kt               # Utility funkcije za parsing
-EncryptionHelper.kt           # HMAC-SHA256 potpisivanje
+PaymentModule.kt              # React Native bridge for payments
+PaymentPackage.kt             # React package registration  
+CheckoutBuilder.kt            # Builder for checkout parameters
+PaymentUtils.kt               # Utility functions for parsing
+EncryptionHelper.kt           # HMAC-SHA256 signing
 ```
 
-#### SDK Stub klase (za build bez externe zavisnosti)
+#### SDK Stub Classes (for build without external dependency)
 
 ```
 enums/
-  ├── Language.kt             # Jezici (EN, DE, FR, itd.)
-  ├── Currency.kt             # Valute (EUR, USD, GBP, itd.)
-  └── CardType.kt             # Vrste kartica
+  ├── Language.kt             # Languages (EN, DE, FR, etc.)
+  ├── Currency.kt             # Currencies (EUR, USD, GBP, etc.)
+  └── CardType.kt             # Card types
 
 models/
   ├── Checkout.kt             # Checkout model
-  ├── Cardholder.kt           # Cardholder informacije
-  ├── InstallmentParams.kt     # Parametri za rate
-  ├── DynamicInstallmentParams.kt # Dinamske rate po kartici
-  └── InstallmentsMap.kt       # Rate sa popustima
+  ├── Cardholder.kt           # Cardholder information
+  ├── InstallmentParams.kt     # Installment parameters
+  ├── DynamicInstallmentParams.kt # Dynamic installments per card
+  └── InstallmentsMap.kt       # Installments with discounts
 
 constants/
-  └── CheckoutCodes.kt        # Result kodovi
+  └── CheckoutCodes.kt        # Result codes
 ```
 
 #### TypeScript/JavaScript
 
 ```
-src/PaymentModule.ts          # TypeScript interfejsi
-src/index.tsx                 # Eksport svih funkcija
+src/PaymentModule.ts          # TypeScript interfaces
+src/index.tsx                 # All exports
 ```
 
-#### Dokumentacija
+#### Documentation
 
 ```
-PAYMENT_MODULE.md             # Detaljno API vodiče
-ANDROID_SETUP.md              # Setup instrukcije za nove projekte
-example/src/App.tsx           # Kompletan primer aplikacije
+PAYMENT_MODULE.md             # Detailed API guide
+ANDROID_SETUP.md              # Setup instructions for new projects
+example/src/App.tsx           # Complete example application
 ```
 
-### 🎯 Funkcionalnosti
+### 🎯 Features
 
-- ✅ Checkout sa signaturom (server-signed)
-- ✅ Checkout sa secret ključem (client-signed)
-- ✅ Konfiguracija okruženja (TEST/PRODUCTION)
-- ✅ Podrška za različite valute
-- ✅ Podrška za različite jezike
-- ✅ Podrška za različite vrste kartica
-- ✅ Instalmentne opcije:
-  - Fiksni broj rata
-  - Fleksibilne rate (Payment All)
-  - Dinamske rate po kartici
-- ✅ Installment popusti
-- ✅ Sačuvane kartice (Card Profiles)
-- ✅ Cardholder informacije
-- ✅ SEPA/Direct Debit podrška
+- ✅ Checkout with signature (server-signed)
+- ✅ Checkout with secret key (client-signed)
+- ✅ Environment configuration (TEST/PRODUCTION)
+- ✅ Support for different currencies
+- ✅ Support for different languages
+- ✅ Support for different card types
+- ✅ Installment options:
+  - Fixed number of installments
+  - Flexible installments (Payment All)
+  - Dynamic installments per card type
+- ✅ Installment discounts
+- ✅ Saved cards (Card Profiles)
+- ✅ Cardholder information
+- ✅ SEPA/Direct Debit support
 
-### 🏗️ Arhitektura
+### 🏗️ Architecture
 
 ```
 React Native (TypeScript/JavaScript)
          ↓
-  PaymentModule.ts (Interfejsi)
+  PaymentModule.ts (Interfaces)
          ↓
 NativeModules (Android Bridge)
          ↓
   PaymentModule.kt (Native Kotlin)
          ↓
-  CheckoutBuilder.kt (Parametri)
+  CheckoutBuilder.kt (Parameters)
   PaymentUtils.kt (Parsing)
-  EncryptionHelper.kt (Potpisivanje)
+  EncryptionHelper.kt (Signing)
          ↓
   Checkout Model → CorvusPay SDK
 ```
 
-## 📦 Struktura Paketa
+## 📦 Package Structure
 
 ```
 android/src/main/java/
@@ -109,30 +109,30 @@ example/
 └── src/App.tsx
 ```
 
-## 🚀 Brz Start
+## 🚀 Quick Start
 
-### 1. Instalacija
+### 1. Installation
 
-Fajlovi su već integrisirani u SDK. Samo koristi:
+Files are already integrated in the SDK. Just use:
 
 ```typescript
 import { PaymentModule } from 'react-native-corvus-pay';
 ```
 
-### 2. Osnovna Upotreba
+### 2. Basic Usage
 
 ```typescript
 import { PaymentModule } from 'react-native-corvus-pay';
 
-// Konfiguracija
+// Configuration
 PaymentModule.configureEnvironment('test');
 
-// Checkout sa secret ključem
+// Checkout with secret key
 const result = await PaymentModule.checkoutWithSecret(
   {
     storeId: 12345,
     orderId: 'ORDER-123',
-    cart: 'Proizvod x 1',
+    cart: 'Product x 1',
     language: 'EN',
     currency: 'EUR',
     amount: 100.0,
@@ -141,9 +141,9 @@ const result = await PaymentModule.checkoutWithSecret(
 );
 ```
 
-### 3. Deployment na Novi Projekt
+### 3. Deployment to New Project
 
-Detalje vidi u `ANDROID_SETUP.md` i `PAYMENT_MODULE.md`
+See details in `ANDROID_SETUP.md` and `PAYMENT_MODULE.md`
 
 ## 🔧 Build Status
 
@@ -151,67 +151,67 @@ Detalje vidi u `ANDROID_SETUP.md` i `PAYMENT_MODULE.md`
 ✅ **App Installed: SUCCESSFULLY** 
 ✅ **Example App: RUNNING**
 
-## 📚 Dokumentacija
+## 📚 Documentation
 
-- **PAYMENT_MODULE.md** - Kompletan API vodiče sa primjerima
-- **ANDROID_SETUP.md** - Setup za nove projekte
-- **example/src/App.tsx** - Primjer aplikacije
+- **PAYMENT_MODULE.md** - Complete API guide with examples
+- **ANDROID_SETUP.md** - Setup for new projects
+- **example/src/App.tsx** - Example application
 
-## 🔐 Sigurnost
+## 🔐 Security
 
-- HMAC-SHA256 potpisivanje
-- Server-side signature opcija
-- Enkriptovana plaćanja
-- Podrška za sve standardne kartice
+- HMAC-SHA256 signing
+- Server-side signature option
+- Encrypted payments
+- Support for all standard cards
 
-## ⚙️ Konfiguracija
+## ⚙️ Configuration
 
-### Okruženja
+### Environments
 
-- `test` - Test okruženje (za razvoj)
-- `production` - Produkcijsko okruženje (live plaćanja)
+- `test` - Test environment (for development)
+- `production` - Production environment (for live payments)
 
-### Podržani Jezici
+### Supported Languages
 
 EN, DE, FR, IT, ES, PT, PL, HU, RO, HR, SL, SR, BG, RU
 
-### Podržane Valute
+### Supported Currencies
 
 EUR, USD, GBP, CHF, SEK, NOK, DKK, CZK, HUF, RON, BGN, HRK, RSD
 
-### Podržane Kartice
+### Supported Cards
 
 VISA, MASTER, MAESTRO, AMEX, DINERS, DISCOVER, JCB, DINA
 
-## 📋 Checklist za Korišćenje
+## 📋 Checklist for Usage
 
-- [ ] Kopirati payment fajlove u svoj projekat
-- [ ] Registrovati PaymentPackage u MainApplication
-- [ ] Importovati PaymentModule u React kodu
-- [ ] Konfigurirati okruženje (test/production)
-- [ ] Testiraj sa test kredencijala
-- [ ] Implementiraj server-side signing
-- [ ] Deploy na produkciju
+- [ ] Copy payment files to your project
+- [ ] Register PaymentPackage in MainApplication
+- [ ] Import PaymentModule in React code
+- [ ] Configure environment (test/production)
+- [ ] Test with test credentials
+- [ ] Implement server-side signing
+- [ ] Deploy to production
 
-## 🤝 Podrška
+## 🤝 Support
 
-Za probleme ili pitanja:
+For issues or questions:
 
-1. Proverite `PAYMENT_MODULE.md` - API dokumentaciju
-2. Proverite `example/src/App.tsx` - primjer aplikacije
-3. Proverite `ANDROID_SETUP.md` - setup instrukcije
+1. Check `PAYMENT_MODULE.md` - API documentation
+2. Check `example/src/App.tsx` - example application
+3. Check `ANDROID_SETUP.md` - setup instructions
 
-## 📝 Beleške
+## 📝 Notes
 
-- CorvusPay SDK je stub implementacija - trebalo bi integracija sa pravom bibliotekom
-- Svi payment-related fajlovi su locirani u `android/src/main/java/`
-- TypeScript interfejsi su dostupni u `src/PaymentModule.ts`
-- Primer aplikacije je u `example/src/App.tsx`
+- CorvusPay SDK is stub implementation - real library integration needed
+- All payment-related files are located in `android/src/main/java/`
+- TypeScript interfaces are available in `src/PaymentModule.ts`
+- Example application is in `example/src/App.tsx`
 
 ## 🎓 Next Steps
 
-1. Dobiti CorvusPay SDK od provajdera
-2. Update `CorvusPay.kt` sa pravom implementacijom
-3. Testiraj sa test kredencijala
-4. Pomeri na produkciju
-5. Monitor transakcije na backendu
+1. Get CorvusPay SDK from provider
+2. Update `CorvusPay.kt` with real implementation
+3. Test with test credentials
+4. Move to production
+5. Monitor transactions on backend

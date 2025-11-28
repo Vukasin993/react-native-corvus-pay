@@ -1,28 +1,28 @@
 # CorvusPay Payment Module
 
-Integracija CorvusPay Payment Gateway-a u React Native aplikacije. Modul omogućava brzu i sigurnu obradu plaćanja sa podrškom za razne kartice, rate, i napredne opcije.
+Integration of CorvusPay Payment Gateway into React Native applications. The module enables fast and secure payment processing with support for various card types, installments, and advanced options.
 
-## Instalacija
+## Installation
 
-Modul je već integriram u SDK, trebate samo da ga koristite kroz `PaymentModule`.
+The module is already integrated in the SDK, you just need to use it through `PaymentModule`.
 
-## Osnovna Upotreba
+## Basic Usage
 
-### 1. Konfiguracija Okruženja
+### 1. Configure Environment
 
 ```typescript
 import { PaymentModule } from 'react-native-corvus-pay';
 
-// Postavi test okruženje
+// Set test environment
 PaymentModule.configureEnvironment('test');
 
-// Ili produkcijsko okruženje
+// Or production environment
 PaymentModule.configureEnvironment('production');
 ```
 
-### 2. Osnovna Checkout Transakcija
+### 2. Basic Checkout Transaction
 
-#### Opcija A: Sa Signaturom (Preporučeno - Backend Signing)
+#### Option A: With Signature (Recommended - Backend Signing)
 
 ```typescript
 const checkoutParams = {
@@ -34,7 +34,7 @@ const checkoutParams = {
   amount: 1299.97,
 };
 
-// Prati tvoj backend da generiše signature
+// Ask your backend to generate signature
 const signature = await fetchSignatureFromBackend(checkoutParams);
 
 try {
@@ -48,7 +48,7 @@ try {
 }
 ```
 
-#### Opcija B: Sa Secret Ključem (Client-Side Signing)
+#### Option B: With Secret Key (Client-Side Signing)
 
 ```typescript
 const checkoutParams = {
@@ -71,60 +71,60 @@ try {
 }
 ```
 
-## Napredne Opcije
+## Advanced Options
 
-### Cardholder Informacije
+### Cardholder Information
 
 ```typescript
 const checkoutParams = {
-  // ... obavezna polja ...
+  // ... required fields ...
   cardholder: {
-    address: 'Bulevar Oslobođenja 1',
-    city: 'Novi Sad',
-    country: 'Serbia',
-    countryCode: 'RS',
+    address: 'Main Street 1',
+    city: 'New York',
+    country: 'United States',
+    countryCode: 'US',
     email: 'user@example.com',
-    firstName: 'Petar',
-    lastName: 'Petrović',
-    phone: '+381601234567',
-    zip: '21000',
+    firstName: 'John',
+    lastName: 'Doe',
+    phone: '+1234567890',
+    zip: '10001',
   },
 };
 ```
 
-### Installment Opcije
+### Installment Options
 
-#### Fiksni Broj Rata
+#### Fixed Number of Installments
 
 ```typescript
 const checkoutParams = {
-  // ... obavezna polja ...
+  // ... required fields ...
   installmentParams: {
-    numberOfInstallments: 6, // Fiksnih 6 rata
+    numberOfInstallments: 6, // Fixed 6 installments
   },
 };
 ```
 
-#### Payment All (Fleksibilne Rate)
+#### Payment All (Flexible Installments)
 
 ```typescript
 const checkoutParams = {
-  // ... obavezna polja ...
+  // ... required fields ...
   installmentParams: {
     paymentAll: {
       enabled: true,
-      min: 2,  // Minimalno 2 rate
-      max: 12, // Maksimalno 12 rata
+      min: 2,  // Minimum 2 installments
+      max: 12, // Maximum 12 installments
     },
   },
 };
 ```
 
-#### Dinamske Rate Po Kartici
+#### Dynamic Installments Per Card Type
 
 ```typescript
 const checkoutParams = {
-  // ... obavezna polja ...
+  // ... required fields ...
   installmentParams: {
     paymentAllDynamic: {
       paymentVisa: { enabled: true, min: 2, max: 12 },
@@ -140,11 +140,11 @@ const checkoutParams = {
 };
 ```
 
-### Installments Map (Sa Popustima)
+### Installments Map (With Discounts)
 
 ```typescript
 const checkoutParams = {
-  // ... obavezna polja ...
+  // ... required fields ...
   installmentsMap: {
     items: [
       {
@@ -158,12 +158,12 @@ const checkoutParams = {
           {
             numberOfInstallments: 2,
             amount: 100.0,
-            discountedAmount: 99.0, // 1% popust
+            discountedAmount: 99.0, // 1% discount
           },
           {
             numberOfInstallments: 6,
             amount: 100.0,
-            discountedAmount: 97.0, // 3% popust
+            discountedAmount: 97.0, // 3% discount
           },
         ],
       },
@@ -187,39 +187,39 @@ const checkoutParams = {
 };
 ```
 
-### Card Profiles (Sačuvane Kartice)
+### Card Profiles (Saved Cards)
 
 ```typescript
 const checkoutParams = {
-  // ... obavezna polja ...
+  // ... required fields ...
   useCardProfiles: true,
-  userCardProfilesId: 'user_abc_01', // ID korisnika za sačuvane kartice
+  userCardProfilesId: 'user_abc_01', // User ID for saved cards
 };
 ```
 
-### Dodatne Opcije
+### Additional Options
 
 ```typescript
 const checkoutParams = {
-  // ... obavezna polja ...
+  // ... required fields ...
   
-  // Zahtevaj kompletnu uplatu
+  // Require complete payment
   requireComplete: true,
   
-  // Vreme isticanja (epoch sekunde, max 900s u budućnosti)
+  // Expiration time (epoch seconds, max 900s in future)
   bestBefore: Math.floor(Date.now() / 1000) + 600,
   
-  // Popust na iznos
+  // Discount on amount
   discountAmount: 10.0,
   
-  // Voucher iznos
+  // Voucher amount
   voucherAmount: 5.0,
   
-  // Skrivanje određenih tabova
-  hideTab: 'WALLET', // Skriva jedan tab
-  hideTabs: 'WALLET,CARDS', // Skriva više tabova
+  // Hide specific tabs
+  hideTab: 'WALLET', // Hides one tab
+  hideTabs: 'WALLET,CARDS', // Hides multiple tabs
   
-  // SEPA/Direktni debit opcije
+  // SEPA/Direct Debit options
   creditorReference: 'RF18539007547034',
   debtorIban: 'RS35160005001061195179',
   
@@ -228,7 +228,7 @@ const checkoutParams = {
 };
 ```
 
-## Kompletan Primer
+## Complete Example
 
 ```typescript
 import React, { useState } from 'react';
@@ -289,17 +289,17 @@ export default function CheckoutScreen() {
 }
 ```
 
-## Greške i Hendlovanje
+## Error Handling
 
-### Moguće Greške
+### Possible Errors
 
-- `NO_ACTIVITY` - Aktivnost nije dostupna
-- `ALREADY_RUNNING` - Još jedan checkout je u toku
-- `CHECKOUT_INIT_ERROR` - Greška pri inicijalizaciji
-- `SIGNING_ERROR` - Greška pri potpisivanju
-- `CHECKOUT_ABORTED` - Korisnik je otkazao transakciju
-- `CHECKOUT_FAILURE` - Checkout je neuspešan
-- `RESULT_PARSE_ERROR` - Greška pri parsiranju rezultata
+- `NO_ACTIVITY` - Activity is not available
+- `ALREADY_RUNNING` - Another checkout is in progress
+- `CHECKOUT_INIT_ERROR` - Error during initialization
+- `SIGNING_ERROR` - Error during signing
+- `CHECKOUT_ABORTED` - User cancelled transaction
+- `CHECKOUT_FAILURE` - Checkout failed
+- `RESULT_PARSE_ERROR` - Error parsing result
 
 ```typescript
 try {
@@ -315,23 +315,23 @@ try {
 }
 ```
 
-## Okruženja
+## Environments
 
-- `test` - Test okruženje (za razvoj i testiranje)
-- `production` - Produkcijsko okruženje (za live transakcije)
+- `test` - Test environment (for development and testing)
+- `production` - Production environment (for live transactions)
 
-## Zahtevani Parametri
+## Required Parameters
 
-- `storeId`: Tvoj CorvusPay store ID
-- `orderId`: Jedinstveni ID narudžbine u tvojoj aplikaciji
-- `cart`: Opis proizvoda/usluga
-- `language`: Jezikod plaćanja ('EN', 'DE', itd.)
-- `currency`: Valuta ('EUR', 'USD', itd.)
-- `amount`: Iznos u decimalnom formatu
+- `storeId`: Your CorvusPay store ID
+- `orderId`: Unique order ID in your application
+- `cart`: Description of products/services
+- `language`: Payment language code ('EN', 'DE', etc.)
+- `currency`: Currency ('EUR', 'USD', etc.)
+- `amount`: Amount in decimal format
 
-## Sigurnost
+## Security
 
-- Nikada ne deli tvoj secret ključ sa frontend klijentima
-- Uvek validuj transakcije na svom backend serveru
-- Koristi HTTPS za sve komunikacije
-- Implementiraj server-to-server verifikaciju statusa
+- Never share your secret key with frontend clients
+- Always validate transactions on your backend server
+- Use HTTPS for all communications
+- Implement server-to-server verification of status

@@ -1,15 +1,15 @@
-# CorvusPay Payment Module - Android Setup & Integracija
+# CorvusPay Payment Module - Android Setup & Integration
 
-## Struktura Fajlova
+## File Structure
 
-Svi payment-related fajlovi su sada organizovani u SDK-u:
+All payment-related files are now organized in the SDK:
 
 ```
 android/src/main/java/com/margelo/nitro/corvuspay/
-├── PaymentModule.kt              # Glavna React Native  modul
-├── PaymentPackage.kt             # React package registracija
-├── CheckoutBuilder.kt            # Checkout parametar builder
-├── PaymentUtils.kt               # Utility funkcije
+├── PaymentModule.kt              # Main React Native module
+├── PaymentPackage.kt             # React package registration
+├── CheckoutBuilder.kt            # Checkout parameter builder
+├── PaymentUtils.kt               # Utility functions
 ├── EncryptionHelper.kt           # HMAC-SHA256 signing
 
 android/src/main/java/com/corvuspay/sdk/
@@ -28,38 +28,38 @@ android/src/main/java/com/corvuspay/sdk/
     └── CheckoutCodes.kt
 ```
 
-## Setup na Novom Projektu
+## Setup on New Project
 
-### 1. Kopiranja PaymentModule fajlova
+### 1. Copy PaymentModule Files
 
-Svi potrebni Kotlin fajlovi su u `android/src/main/java/com/margelo/nitro/corvuspay/`:
+All required Kotlin files are in `android/src/main/java/com/margelo/nitro/corvuspay/`:
 
 ```bash
-# Čitav direktorijum je spreman za korišćenje
+# The entire directory is ready to use
 cp -r android/src/main/java/com/margelo/nitro/corvuspay/* \
-  tvoj-projekt/android/app/src/main/java/com/tvoja/kompanija/payments/
+  your-project/android/app/src/main/java/com/your/company/payments/
 ```
 
-### 2. Registracija PaymentPackage
+### 2. Register PaymentPackage
 
-U `MainApplication.kt`:
+In `MainApplication.kt`:
 
 ```kotlin
-import com.tvoja.kompanija.payments.PaymentPackage
+import com.your.company.payments.PaymentPackage
 
 class MainApplication : Application(), ReactApplication {
     override val reactNativeHost: ReactNativeHost =
         object : DefaultReactNativeHost(this) {
             override fun getPackages(): List<ReactPackage> =
                 PackageList(this).packages.apply {
-                    add(PaymentPackage())  // ← Dodaj ovu liniju
+                    add(PaymentPackage())  // ← Add this line
                 }
-            // ... ostatak konfiguracije
+            // ... rest of configuration
         }
 }
 ```
 
-### 3. Korišćenje iz React Native koda
+### 3. Usage from React Native Code
 
 ```typescript
 import { PaymentModule, CheckoutParams } from './payments';
@@ -84,7 +84,7 @@ async function startCheckout() {
     const signature = await getSignatureFromServer(params);
     const result = await PM.checkoutWithSignature(params, signature);
 
-    // Option 2: Client-signed (manje sigurno!)
+    // Option 2: Client-signed (less secure!)
     const result = await PM.checkoutWithSecret(params, 'your-secret-key');
 
     console.log('Payment successful:', result);
@@ -94,26 +94,26 @@ async function startCheckout() {
 }
 ```
 
-## Prilagođavanje za Drugih Projekte
+## Customization for Other Projects
 
-### Promeniti paket ime
+### Change Package Name
 
-Ako koristiš drugačiji paket, zameni:
-- `com.margelo.nitro.corvuspay` sa tvojim paketom
-- `com.corvuspay.sdk` možeš zadržati isti za SDK biblioteke
+If you use a different package, replace:
+- `com.margelo.nitro.corvuspay` with your package
+- `com.corvuspay.sdk` can remain the same for SDK libraries
 
 ```bash
-# Primer za premeštanje u svoj paket
-find . -type f -name "*.kt" -exec sed -i '' 's/com\.margelo\.nitro\.corvuspay/com.tvoja.kompanija.payments/g' {} \;
+# Example for moving to your package
+find . -type f -name "*.kt" -exec sed -i '' 's/com\.margelo\.nitro\.corvuspay/com.your.company.payments/g' {} \;
 ```
 
-### Prilagođavanje PaymentModule konstanti
+### Customize PaymentModule Constants
 
-U `PaymentModule.kt`:
+In `PaymentModule.kt`:
 
 ```kotlin
 companion object {
-    const val NAME = "PaymentModule" // Prilagodi ako trebaš drugi naziv
+    const val NAME = "PaymentModule" // Customize if needed
     const val ENV_TEST = "test"
     const val ENV_PRODUCTION = "production"
     
@@ -123,31 +123,31 @@ companion object {
 }
 ```
 
-### Prilagođavanje CheckoutBuilder
+### Customize CheckoutBuilder
 
-Ako tvoj CorvusPay SDK ima drugačije nazive polja:
+If your CorvusPay SDK has different field names:
 
 ```kotlin
-// U CheckoutBuilder.kt, prilagodi mapiranje:
+// In CheckoutBuilder.kt, adjust the mapping:
 fun buildCheckoutFromParams(params: ReadableMap, signature: String): Checkout {
-    val storeId = params.getInt("storeId") // Prilagodi ključ ako trebaš
-    // ... ostatak
+    val storeId = params.getInt("storeId") // Customize key if needed
+    // ... rest
 }
 ```
 
-## Korišćenje Encryptiona
+## Using Encryption
 
-Modul koristi HMAC-SHA256 za potpisivanje:
+The module uses HMAC-SHA256 for signing:
 
 ```kotlin
-// U EncryptionHelper.kt
+// In EncryptionHelper.kt
 val signature = EncryptionHelper.generateHashWithHmac256(
     stringToBeSigned = "storeId|orderId|amount|currency",
     key = "your-secret-key"
 )
 ```
 
-## Testiranje
+## Testing
 
 ### Android Studio
 
@@ -155,7 +155,7 @@ val signature = EncryptionHelper.generateHashWithHmac256(
 cd android
 ./gradlew :app:build
 
-# ili sa verbose opcijama
+# or with verbose options
 ./gradlew :app:build --info
 ```
 
@@ -164,69 +164,69 @@ cd android
 ```bash
 react-native run-android
 
-# ili
+# or
 yarn android
 ```
 
-## Mogućnosti Plaćanja
+## Payment Features
 
-Modul podržava:
+The module supports:
 
-- ✅ Različite vrste kartica (VISA, MASTER, MAESTRO, AMEX, itd.)
-- ✅ Različite valute (EUR, USD, GBP, itd.)
-- ✅ Različite jezike (EN, DE, FR, itd.)
-- ✅ Rate (fiksne, fleksibilne, dinamske po kartici)
-- ✅ Instalmen popuste per kartica
-- ✅ Sačuvane kartice (Card Profiles)
-- ✅ Cardholder informacije
-- ✅ SEPA/Direct Debit integracija
+- ✅ Different card types (VISA, MASTER, MAESTRO, AMEX, etc.)
+- ✅ Different currencies (EUR, USD, GBP, etc.)
+- ✅ Different languages (EN, DE, FR, etc.)
+- ✅ Installments (fixed, flexible, dynamic per card type)
+- ✅ Installment discounts per card
+- ✅ Saved cards (Card Profiles)
+- ✅ Cardholder information
+- ✅ SEPA/Direct Debit integration
 
-## Sigurnosne Napomene
+## Security Notes
 
-1. **Nikada ne deli secret ključ sa frontend kodom** u produkciji
-2. Koristiti server-side signing (opcija 1) za produkciju
-3. Validate sve transakcije na backendu
-4. Koristi HTTPS za sve komunikacije
-5. Implementiraj proper error handling
+1. **Never share secret key with frontend code** in production
+2. Use server-side signing (option 1) for production
+3. Validate all transactions on the backend
+4. Use HTTPS for all communications
+5. Implement proper error handling
 
 ## Troubleshooting
 
-### Build greške
+### Build Errors
 
-Ako dobijaš greške tokom build-a:
+If you get errors during build:
 
 ```bash
-# Očisti cache
+# Clean cache
 rm -rf android/build
 rm -rf node_modules
 
-# Regeneriši nitrogen files
+# Regenerate nitrogen files
 yarn prepare
 
-# Pokušaj build ponovo
+# Try build again
 yarn android
 ```
 
-### Runtime greške
+### Runtime Errors
 
-Ako PaymentModule nije dostupan:
+If PaymentModule is not available:
 
 ```typescript
-// Proveri da li je registrovan
+// Check if it's registered
 import { NativeModules } from 'react-native';
-console.log(Object.keys(NativeModules)); // Trebalo bi da vidiš PaymentModule
+console.log(Object.keys(NativeModules)); // Should see PaymentModule
 ```
 
 ## Next Steps
 
-1. Integruj CorvusPay SDK (čeka se dostupa od tvog provajdera)
-2. Update `CorvusPay.kt` sa pravom implementacijom
-3. Implementiraj server-side signing na backendu
-4. Testiraj sa test kredencijalni
-5. Pomeri na produkciju
+1. Integrate CorvusPay SDK (waiting for provider access)
+2. Update `CorvusPay.kt` with real implementation
+3. Implement server-side signing on backend
+4. Test with test credentials
+5. Move to production
 
-## Dodatne Resurse
+## Additional Resources
 
-- `PAYMENT_MODULE.md` - Detaljno API dokumentacija
-- `PaymentModule.ts` - TypeScript interfejsi
-- `example/src/App.tsx` - Kompletan primer aplikacije
+- `PAYMENT_MODULE.md` - Detailed API documentation
+- `PaymentModule.ts` - TypeScript interfaces
+- `example/src/App.tsx` - Complete example application

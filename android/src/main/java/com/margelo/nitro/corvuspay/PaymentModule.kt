@@ -2,6 +2,7 @@ package com.margelo.nitro.corvuspay
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import com.margelo.nitro.corvuspay.CheckoutBuilder.buildCheckoutFromParams
 import com.corvuspay.sdk.constants.CheckoutCodes
 import com.facebook.react.bridge.Arguments
@@ -146,15 +147,27 @@ class PaymentModule(reactContext: ReactApplicationContext) :
             // Build checkout from parameters
             val checkout = buildCheckoutFromParams(params, signature)
             
-            // TODO: Implement actual CorvusPay.checkout() call once SDK is available
+            Log.d("PaymentModule", "Checkout called: Order=${PaymentUtils.optString(params, "orderId")}, Amount=${params.getDouble("amount")}")
+            
+            // TODO: Call CorvusPay SDK when available
+            // For now, just log
+            // val activity = reactApplicationContext.currentActivity
+            // if (activity != null) {
+            //     com.corvuspay.sdk.CorvusPay.checkout(activity, checkout, environment)
+            // }
+            
             val result = Arguments.createMap()
-            result.putString("status", "initialized")
+            result.putString("status", "checkout_initiated")
             result.putString("environment", environment)
+            result.putString("orderId", PaymentUtils.optString(params, "orderId"))
+            result.putDouble("amount", params.getDouble("amount"))
+            result.putString("message", "CorvusPay SDK stub - checkout parameters logged")
             
             promise.resolve(result)
             pendingPromise = null
 
         } catch (t: Throwable) {
+            Log.e("PaymentModule", "Checkout error", t)
             promise.reject("CHECKOUT_INIT_ERROR", t.message, t)
             pendingPromise = null
         }

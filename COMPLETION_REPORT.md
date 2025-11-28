@@ -8,12 +8,12 @@
 
 ## 🎯 Integration Complete
 
-Integracija CorvusPay Payment Module-a u React Native SDK je **uspešno dovršena**.
+Integration of CorvusPay Payment Module into React Native SDK is **successfully completed**.
 
 ### Summary
 
-| Komponenta | Status | Fajlovi |
-|-----------|--------|---------|
+| Component | Status | Files |
+|-----------|--------|-------|
 | **Android Payment Module** | ✅ Complete | 5 |
 | **SDK Models & Enums** | ✅ Complete | 10 |
 | **TypeScript Interfaces** | ✅ Complete | 2 |
@@ -23,11 +23,11 @@ Integracija CorvusPay Payment Module-a u React Native SDK je **uspešno dovršen
 
 ---
 
-## 📁 Dodan Fajlovi
+## 📁 Added Files
 
-### Android Kotlin (15 fajlova)
+### Android Kotlin (15 files)
 
-#### Payment Module (5 fajlova)
+#### Payment Module (5 files)
 ```
 ✅ android/src/main/java/com/margelo/nitro/corvuspay/
    ├── PaymentModule.kt           (276 lines)  - Main React Native module
@@ -37,7 +37,7 @@ Integracija CorvusPay Payment Module-a u React Native SDK je **uspešno dovršen
    └── EncryptionHelper.kt        (32 lines)   - HMAC-SHA256 encryption
 ```
 
-#### SDK Models & Constants (10 fajlova)
+#### SDK Models & Constants (10 files)
 ```
 ✅ android/src/main/java/com/corvuspay/sdk/
 
@@ -60,7 +60,7 @@ Core (1):
 └── CorvusPay.kt                - SDK launcher
 ```
 
-### TypeScript/JavaScript (2 fajlova)
+### TypeScript/JavaScript (2 files)
 
 ```
 ✅ src/
@@ -71,7 +71,7 @@ Core (1):
    └── example/src/App.tsx       - Complete example application
 ```
 
-### Documentation (3 fajlova)
+### Documentation (3 files)
 
 ```
 ✅ PAYMENT_MODULE.md             - Complete API documentation
@@ -316,9 +316,9 @@ For deploying to a new project:
 
 ## 🎉 Conclusion
 
-CorvusPay Payment Module je **uspešno integrovan** u React Native SDK sa:
+CorvusPay Payment Module is **successfully integrated** into React Native SDK with:
 
-- ✅ Kompletnom Android implementacijom
+- ✅ Complete Android implementation
 - ✅ TypeScript type safety
 - ✅ Comprehensive documentation
 - ✅ Working example application
