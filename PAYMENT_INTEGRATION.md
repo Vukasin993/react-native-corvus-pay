@@ -1,8 +1,10 @@
+src/PaymentModule.ts          # TypeScript interfaces
+src/
 # 🚀 CorvusPay React Native SDK - Payment Module Integration
 
 ## What Has Been Done
 
-Integration of complete payment module for CorvusPay Internet Payment Gateway into React Native SDK for Android and iOS.
+Integration of the complete payment module for CorvusPay Internet Payment Gateway into the React Native SDK for Android and iOS.
 
 ### ✅ Added Files
 
@@ -10,7 +12,7 @@ Integration of complete payment module for CorvusPay Internet Payment Gateway in
 
 ```
 PaymentModule.kt              # React Native bridge for payments
-PaymentPackage.kt             # React package registration  
+PaymentPackage.kt             # React package registration
 CheckoutBuilder.kt            # Builder for checkout parameters
 PaymentUtils.kt               # Utility functions for parsing
 EncryptionHelper.kt           # HMAC-SHA256 signing
@@ -27,9 +29,9 @@ enums/
 models/
   ├── Checkout.kt             # Checkout model
   ├── Cardholder.kt           # Cardholder information
-  ├── InstallmentParams.kt     # Installment parameters
+  ├── InstallmentParams.kt    # Installment parameters
   ├── DynamicInstallmentParams.kt # Dynamic installments per card
-  └── InstallmentsMap.kt       # Installments with discounts
+  └── InstallmentsMap.kt      # Installments with discounts
 
 constants/
   └── CheckoutCodes.kt        # Result codes
@@ -101,7 +103,7 @@ android/src/main/java/
     ├── models/
     └── constants/
 
-src/
+
 ├── PaymentModule.ts
 └── index.tsx
 
@@ -148,7 +150,7 @@ See details in `ANDROID_SETUP.md` and `PAYMENT_MODULE.md`
 ## 🔧 Build Status
 
 ✅ **Android Build: SUCCESSFUL** (24s)
-✅ **App Installed: SUCCESSFULLY** 
+✅ **App Installed: SUCCESSFULLY**
 ✅ **Example App: RUNNING**
 
 ## 📚 Documentation
@@ -157,7 +159,7 @@ See details in `ANDROID_SETUP.md` and `PAYMENT_MODULE.md`
 - **ANDROID_SETUP.md** - Setup for new projects
 - **example/src/App.tsx** - Example application
 
-## 🔐 Security
+## 🔒 Security
 
 - HMAC-SHA256 signing
 - Server-side signature option
@@ -203,7 +205,7 @@ For issues or questions:
 
 ## 📝 Notes
 
-- CorvusPay SDK is stub implementation - real library integration needed
+- CorvusPay SDK is a stub implementation - real library integration needed
 - All payment-related files are located in `android/src/main/java/`
 - TypeScript interfaces are available in `src/PaymentModule.ts`
 - Example application is in `example/src/App.tsx`

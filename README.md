@@ -1,42 +1,43 @@
 # react-native-corvus-pay
 
-React Native payment module za brzu i sigurnu integraciju CorvusPay Internet Payment Gatewaya u mobilne aplikacije (iOS i Android).
+React Native payment module for fast and secure integration of the CorvusPay Internet Payment Gateway into mobile applications (iOS and Android).
 
-## Instalacija
+yarn add react-native-corvus-pay react-native-nitro-modules
+## Installation
 
 ```sh
 npm install react-native-corvus-pay react-native-nitro-modules
-# ili
+# or
 yarn add react-native-corvus-pay react-native-nitro-modules
 ```
 
-> `react-native-nitro-modules` je obavezan jer se biblioteka bazira na [Nitro Modules](https://nitro.margelo.com/).
+> `react-native-nitro-modules` is required because this library is based on [Nitro Modules](https://nitro.margelo.com/).
 
 ## Setup
 
 ### Android
 
-U `MainApplication.kt` dodaj `PaymentPackage`:
+In `MainApplication.kt` add `PaymentPackage`:
 
 ```kotlin
 import com.margelo.nitro.corvuspay.PaymentPackage
 
 class MainApplication : Application(), ReactApplication {
-    override val reactNativeHost: ReactNativeHost =
-        object : DefaultReactNativeHost(this) {
-            override fun getPackages(): List<ReactPackage> =
-                PackageList(this).packages.apply {
-                    add(PaymentPackage())
-                }
+  override val reactNativeHost: ReactNativeHost =
+    object : DefaultReactNativeHost(this) {
+      override fun getPackages(): List<ReactPackage> =
+        PackageList(this).packages.apply {
+          add(PaymentPackage())
         }
+    }
 }
 ```
 
 ### iOS
 
-Pokreni `pod install` u `ios/` direktorijumu.
+Run `pod install` in the `ios/` directory.
 
-## Korišćenje
+## Usage
 
 ```typescript
 import { PaymentModule } from 'react-native-corvus-pay';
@@ -44,10 +45,10 @@ import { PaymentModule } from 'react-native-corvus-pay';
 export default function PaymentScreen() {
   const handleCheckout = async () => {
     try {
-      // Konfiguruj okruženje
-      PaymentModule.configureEnvironment('test'); // ili 'production'
+      // Configure environment
+      PaymentModule.configureEnvironment('test'); // or 'production'
 
-      // Pripremi checkout parametre
+      // Prepare checkout parameters
       const checkoutParams = {
         storeId: 12345,
         orderId: 'ORDER-2025-001',
@@ -58,22 +59,22 @@ export default function PaymentScreen() {
         requireComplete: false,
       };
 
-      // Koristi secret key (client-side signing)
+      // Use secret key (client-side signing)
       const result = await PaymentModule.checkoutWithSecret(
         checkoutParams,
         'your-secret-key'
       );
 
       if (result.status === 'success') {
-        console.log('Plaćanje uspešno!');
-        // Ažuriraj backend da potvrdi plaćanje
+        console.log('Payment successful!');
+        // Update backend to confirm payment
       }
     } catch (error) {
-      console.error('Greška pri plaćanju:', error);
+      console.error('Payment error:', error);
     }
   };
 
-  return <Button title="Plati" onPress={handleCheckout} />;
+  return <Button title="Pay" onPress={handleCheckout} />;
 }
 ```
 
@@ -81,7 +82,7 @@ export default function PaymentScreen() {
 
 ### `PaymentModule.configureEnvironment(env: 'test' | 'production')`
 
-Konfigurira okruženje za checkout.
+Configures the environment for checkout.
 
 ```typescript
 PaymentModule.configureEnvironment('test');
@@ -89,7 +90,7 @@ PaymentModule.configureEnvironment('test');
 
 ### `PaymentModule.checkoutWithSecret(params: CheckoutParams, secretKey: string): Promise<CheckoutResult>`
 
-Otvara checkout sa client-side HMAC-SHA256 potpisivanjem (brže, ali manje sigurno).
+Opens checkout with client-side HMAC-SHA256 signing (faster, but less secure).
 
 ```typescript
 const result = await PaymentModule.checkoutWithSecret(checkoutParams, secretKey);
@@ -97,7 +98,7 @@ const result = await PaymentModule.checkoutWithSecret(checkoutParams, secretKey)
 
 ### `PaymentModule.checkoutWithSignature(params: CheckoutParams, signature: string): Promise<CheckoutResult>`
 
-Otvara checkout sa server-side potpisivanjem (preporučeno za produkciju).
+Opens checkout with server-side signing (recommended for production).
 
 ```typescript
 const signature = await fetchSignatureFromBackend(checkoutParams);
@@ -108,15 +109,15 @@ const result = await PaymentModule.checkoutWithSignature(checkoutParams, signatu
 
 ```typescript
 interface CheckoutParams {
-  // OBAVEZNI
-  storeId: number;          // ID prodavnice
-  orderId: string;          // Jedinstveni ID porudžbine
-  cart: string;             // Opis proizvoda
-  language?: string;        // 'EN', 'DE', 'FR', itd.
-  currency?: string;        // 'EUR', 'USD', 'GBP', itd.
-  amount: number;           // Iznos u decimalima
+  // REQUIRED
+  storeId: number;          // Store ID
+  orderId: string;          // Unique order ID
+  cart: string;             // Product description
+  language?: string;        // 'EN', 'DE', 'FR', etc.
+  currency?: string;        // 'EUR', 'USD', 'GBP', etc.
+  amount: number;           // Amount in decimals
 
-  // OPCIONI
+  // OPTIONAL
   requireComplete?: boolean;
   bestBefore?: number;      // Epoch seconds
   discountAmount?: number;
@@ -137,11 +138,11 @@ interface CheckoutParams {
     zip?: string;
   };
 
-  // Rate (samo jedan oblik)
+  // Installment (only one type)
   installmentParams?: {
-    numberOfInstallments?: number; // Fiksno
-    paymentAll?: { enabled: boolean; min: number; max: number }; // Fleksibilno
-    paymentAllDynamic?: { /* ... */ }; // Po kartici
+    numberOfInstallments?: number; // Fixed
+    paymentAll?: { enabled: boolean; min: number; max: number }; // Flexible
+    paymentAllDynamic?: { /* ... */ }; // Per card
   };
 }
 ```
